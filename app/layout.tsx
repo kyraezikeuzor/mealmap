@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'] })
 
 
 export const metadata: Metadata = {
-  title: "Waylarm | Up-to-date info for ongoing natural disasters.",
-  description: "We provide up-to-date info for ongoing natural disasters.",
+  title: "MealMap | Locate Food Resources Near You",
+  description: "We provide up-to-date info for foodbanks across the United States.",
 };
 
 export default function RootLayout({

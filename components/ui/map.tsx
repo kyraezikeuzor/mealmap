@@ -6,38 +6,25 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { RMap, RMapContextProvider, useMap } from "maplibre-react-components";
 
-import { DisasterType } from '@/types';
+import { ResourceType } from '@/types';
 import { getGeocode, formatDeclarationTitle } from '@/lib/utils';
 
 const mapStyleLight = 'https://api.maptiler.com/maps/streets/style.json'
 const mapStyleDark = 'https://api.maptiler.com/maps/streets-v2-dark/style.json'
 
-// Color mapping function for incident types
-const getMarkerColor = (incidentType: string): string => {
-  switch (incidentType.toLowerCase()) {
-    case 'hurricane': return '#748cb9';
-    case 'fire': return '#ff694f';
-    case 'flood': return '#57c5e3';
-    case 'tornado': return '#c0cdd0';
-    case 'earthquake': return '#32565e';
-    case 'tropical storm': return '#5690ff';
-    case 'mud/landslide': return 'brown';
-    case 'severe storm': return '#6169c1'
-    default: return '#FFFFFF';
-  }
-};
+
 
 interface MapComponentProps {
-  disasters: DisasterType[];
-  selectedDisaster: DisasterType;
-  setSelectedDisaster: React.Dispatch<React.SetStateAction<DisasterType | null>>;
-  onFlyToReady?: (flyTo: (disaster: DisasterType) => void) => void;
+  resources: ResourceType[];
+  selectedResource: ResourceType | null;
+  setSelectedResource: React.Dispatch<React.SetStateAction<ResourceType | null>>;
+  onFlyToReady?: (flyTo: (resource: ResourceType) => void) => void;
 }
 
 export const MapComponent: React.FC<MapComponentProps> = ({ 
-  disasters, 
-  selectedDisaster,
-  setSelectedDisaster,
+  resources, 
+  selectedResource,
+  setSelectedResource,
   onFlyToReady 
 }) => {
   const [isClient, setIsClient] = useState(false);
@@ -109,13 +96,13 @@ export const MapComponent: React.FC<MapComponentProps> = ({
     mapInstance.current = map;
   
     map.on('load', async () => {
-      // Add markers for disasters
-      for (const disaster of disasters) {
+      // Add markers for resources
+      for (const resource of resources) {
         try {
-          const coordinates = await getGeocode(`${disaster.designatedArea}, ${disaster.state}`);
+          const coordinates = await getGeocode(`${resource.address}, ${resource.state}`);
           
           if (coordinates) {
-            const markerColor = getMarkerColor(disaster.incidentType);
+            const markerColor = 'red';
   
             // Create and add marker
             const marker = new maplibregl.Marker({
@@ -128,9 +115,9 @@ export const MapComponent: React.FC<MapComponentProps> = ({
                   .setHTML(`
                     <div class='w-full h-full bg-transparent text-black'>
                         <div class='flex flex-col'>
-                            <span class="text-sm font-medium">${formatDeclarationTitle(disaster.declarationTitle)}</span>
+                            <span class="text-sm font-medium">${formatDeclarationTitle(resource.name)}</span>
                             <div class='flex flex-col '>
-                                <span class='text-sm flex flex-row gap-1'>${disaster.designatedArea}</span>
+                                <span class='text-sm flex flex-row gap-1'>${resource.address}</span>
                             </div>
                         </div>
                     </div>
@@ -140,7 +127,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
   
             // Attach click event to marker
             marker.getElement().addEventListener('click', () => {
-              setSelectedDisaster(disaster);
+              setSelectedResource(resource);
             });
   
             markersRef.current.push(marker); // Store the marker in the ref
@@ -154,7 +141,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
     return () => {
       map.remove();
     };
-  }, [disasters, onFlyToReady, isClient, isDarkMode]);
+  }, [resources, onFlyToReady, isClient, isDarkMode]);
 
   // Only render on client
   if (!isClient) return null;
@@ -163,8 +150,8 @@ export const MapComponent: React.FC<MapComponentProps> = ({
     <RMapContextProvider>
       <div ref={mapContainer} className='w-full h-screen absolute top-0 bottom-0 left-0 right-0'>
         <RMap>
-          {selectedDisaster && (
-            <Marker selectedDisaster={selectedDisaster} />
+          {selectedResource && (
+            <Marker selectedResource={selectedResource} />
           )}
         </RMap>
       </div>
@@ -172,7 +159,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
   );
 };
 
-const Marker = ({ selectedDisaster }: { selectedDisaster: DisasterType | null }) => {
+const Marker = ({ selectedResource }: { selectedResource: ResourceType | null }) => {
   const map = useMap();
 
   const flyToMarker = async (coordinates: [number, number], zoom: number) => {
@@ -191,9 +178,9 @@ const Marker = ({ selectedDisaster }: { selectedDisaster: DisasterType | null })
 
   useEffect(() => {
     const flyToMarkerGeocode = async () => {
-      if (selectedDisaster) {
+      if (selectedResource) {
         try {
-          const selectedGeocode = await getGeocode(`${selectedDisaster.designatedArea}, ${selectedDisaster.state}`);
+          const selectedGeocode = await getGeocode(`${selectedResource.address}, ${selectedResource.state}`);
           if (selectedGeocode && typeof selectedGeocode[0] !== 'undefined') {
             await flyToMarker(selectedGeocode, 11);
           }
@@ -206,7 +193,7 @@ const Marker = ({ selectedDisaster }: { selectedDisaster: DisasterType | null })
     if (map) {
       flyToMarkerGeocode();
     }
-  }, [selectedDisaster, map]);
+  }, [selectedResource, map]);
 
   return null;
 };
