@@ -1,4 +1,4 @@
-# <img src="public/waylarm-logo.png" alt="Logo" width="30"> MealMap: A Simple Way to Find Food Resources Near You
+# <img src="public/waylarm-logo.png" alt="Logo" width="30"> MealMap: Simply Find Food Resources Near You
 
 **MealMap** is a web app I built with [Next.js](https://nextjs.org) to help people find food banks and community food resources across the United States. It uses OpenStreetMap for the map and stores all the food bank information in a Supabase database.
 
