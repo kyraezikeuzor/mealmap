@@ -1,59 +1,52 @@
-# <img src="public/waylarm-logo.png" alt="Logo" width="30"> Waylarm: Providing Live, Up-to-Date Disaster Information
+# <img src="public/waylarm-logo.png" alt="Logo" width="30"> MealMap: A Simple Way to Find Food Resources Near You
 
-**Waylarm** is a web application built with [Next.js](https://nextjs.org), designed to provide users with interactive and real-time disaster response data. It utilizes Maptiler for dynamic map rendering and the OpenFEMA API to access and display federal disaster information.
+**MealMap** is a web app I built with [Next.js](https://nextjs.org) to help people find food banks and community food resources across the United States. It uses OpenStreetMap for the map and stores all the food bank information in a Supabase database.
 
-You can access the website at: [https://waylarm.vercel.app](https://waylarm.vercel.app)
+Website: **https://mealmap.vercel.app**  
+*(Add your real link if different)*
 
 ## Features
-- **Interactive Maps**: Uses Maptiler to render detailed, interactive maps.
-- **Real-time Disaster Data**: Fetches disaster-related information using the OpenFEMA API, allowing users to stay updated with federal disaster data.
+- **Interactive Map**: Shows food bank markers across the country using OpenStreetMap.
+- **Food Bank List**: A sidebar with all the food banks on the site, which you can filter by state.
+- **Info Popups**: Click a marker or a card to see details like the address, contact info, and ways to visit, donate, or volunteer.
 
 ## Getting Started
 
-To run the development server locally, follow these steps:
+If you want to run MealMap locally:
 
-1. Clone the repository:
+1. Clone the repo:
    ```bash
-   git clone https://github.com/kyraezikeuzor/waylarm.git
-   cd waylarm
-   ```
+   git clone https://github.com/kyraezikeuzor/mealmap.git
+   cd mealmap
 
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn install
-   # or
-   pnpm install
-   ```
+2.	Install everything:
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
-   # or
-   bun dev
-   ```
+npm install
+# or yarn install
+# or pnpm install
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+3.	Start the dev server:
 
-The page will auto-update as you make changes to the code, allowing for quick iteration during development.
+npm run dev
+# or yarn dev
+# or pnpm dev
 
-## Learn More
 
-To learn more about Next.js, explore the following resources:
+4.	Open http://localhost:3000￼ to see it in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - An interactive tutorial to get started with Next.js.
+###What I Used
+	•	Next.js + TypeScript for the app
+	•	OpenStreetMap for the map
+	•	Supabase for storing the food bank data
+	•	Firecrawl.dev to help gather food bank information
 
-You can also check out [the Next.js GitHub repository](https://github.com/vercel/next.js) for additional resources and contributions.
+###Extra Links
+	•	Next.js Docs￼
+	•	Supabase Docs￼
+	•	OpenStreetMap￼
 
-## Deploy on Vercel
+##Deployment
 
-For the easiest deployment process, use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) to deploy your Next.js app.
+I deployed MealMap using Vercel because it works well with Next.js and updates automatically whenever I push new code.
 
-For more deployment details, check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
-# mealmap
+If you want, I can also generate a shorter version, a more casual one, or one with screenshots.
