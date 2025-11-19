@@ -31,18 +31,18 @@ If you want to run MealMap locally:
 
 4.	Open http://localhost:3000￼ to see it in your browser.
 
-###What I Used
+## What I Used
 	•	Next.js + TypeScript for the app
 	•	OpenStreetMap for the map
 	•	Supabase for storing the food bank data
 	•	Firecrawl.dev to help gather food bank information
 
-###Extra Links
+## Extra Links
 	•	Next.js Docs￼
 	•	Supabase Docs￼
 	•	OpenStreetMap￼
 
-##Deployment
+## Deployment
 
 I deployed MealMap using Vercel because it works well with Next.js and updates automatically whenever I push new code.
 
