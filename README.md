@@ -2,7 +2,7 @@
 
 **MealMap** is a web app I built with [Next.js](https://nextjs.org) to help people find food banks and community food resources across the United States. It uses OpenStreetMap for the map and stores all the food bank information in a Supabase database.
 
-Website: **https://mealmap.vercel.app**  
+Website: **https://mealmap-site.vercel.app**  
 *(Add your real link if different)*
 
 ## Features
