@@ -2,23 +2,16 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-import { ResourceType } from '@/types'
+import { DisasterType } from '@/types'
 
 import { X } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 import { getGeocode, formatDeclarationTitle } from '@/lib/utils'
-import { Button } from './button'
-import Link from "next/link"
-import { Phone } from 'lucide-react'
-import { Apple } from 'lucide-react'
-import { HandHelping } from 'lucide-react'
-import { DollarSign } from 'lucide-react'
-import { Globe } from 'lucide-react'
 
 
 export const PopupImage = (
-    {resource}:{resource:ResourceType}
+    {disaster}:{disaster:DisasterType}
   ) => {
     const [photoUrl, setPhotoUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -28,7 +21,7 @@ export const PopupImage = (
         const fetchPhotoUrl = async () => {
             try {
                 setLoading(true);
-                const photo = await axios.get(`/api/unsplash?query=${resource.city},${resource.state}`)
+                const photo = await axios.get(`/api/unsplash?query=${disaster.designatedArea},${disaster.state}`)
                 if (photo) {
                     setPhotoUrl(photo.data)
                 } else {
@@ -42,8 +35,7 @@ export const PopupImage = (
             }
         } 
         fetchPhotoUrl();
-      }, [resource]);
-
+      }, [disaster]);
   
     if (loading) {
       return <Skeleton className="h-[250px] w-full rounded-lg" />;
@@ -64,15 +56,15 @@ export const PopupImage = (
   };
   
 export const Popup =  (
-    {resource, onClickOut}:{resource: ResourceType, onClickOut: () => void}
+    {disaster, onClickOut}:{disaster: DisasterType, onClickOut: () => void}
   ) => {
 
     const [geocode, setGeocode] = useState()
     
     useEffect(()=>{
         const fetchGeocode = async () => {
-            const data = await getGeocode(`${resource.address}, ${resource.state}`)
-            const geocodeData = data.data   
+            const data = await getGeocode(`${disaster.designatedArea}, ${disaster.state}`)
+            const geocodeData = data.data
             setGeocode(geocodeData)
         }
         fetchGeocode()
@@ -85,53 +77,51 @@ export const Popup =  (
                     <X className='text-foreground'/>
                 </span>
                 <div className='flex flex-row flex-wrap space-x-2 items-center px-3'>
-                    <span className='text-lg font-semibold leading-6'>
-                        {formatDeclarationTitle(resource.name)}
+                    <span className='text-lg font-semibold'>
+                        {formatDeclarationTitle(disaster.declarationTitle)}
                     </span>
                     <span
-                      className='text-xs font-medium w-fit py-[1px] px-4 rounded-full text-white bg-red-500'
+                      className={`
+                          ${disaster.incidentType.toLowerCase() === 'hurricane' ? 'bg-red-100' :
+                          disaster.incidentType.toLowerCase() === 'fire' ? 'bg-orange-100' :
+                          disaster.incidentType.toLowerCase() === 'flood' ? 'bg-blue-100' :
+                          disaster.incidentType.toLowerCase() === 'tornado' ? 'bg-purple-100' :
+                          disaster.incidentType.toLowerCase() === 'earthquake' ? 'bg-brown-100' : 
+                          disaster.incidentType.toLowerCase() === 'tropical storm' ? 'bg-indigo-300' :
+                          disaster.incidentType.toLowerCase() === 'severe storm' ? 'bg-purple-300' :
+                          ''} 
+                          text-xs font-medium w-fit py-[1px] px-4 rounded-full text-black
+                      `}
                     >
-                      Food Bank
-                    </span>
+                      {disaster.incidentType}
+                  </span>
                 </div>
                 <div className='px-3'>
                     <PopupImage
-                      resource={resource}
+                      disaster={disaster}
                     />
                 </div>
                 <div className='flex flex-row justify-between items-center'>
                     <div className='w-1/2 flex flex-col gap-1 px-3'>
-                        <span className='text-gray-500 text-sm'>Important Links</span>
-                        <div className='flex flex-col gap-1 text-sm'>
-                            <Button variant="outline" className='bg-red-500 text-white flex flex-row items-center gap-1'>
-                                <Apple className='w-4 h-4' /> <Link href={resource.find_food_link || 'https://google.com'}>Find Food</Link>
-                            </Button>
-                            
-                            <Button variant="outline" className='bg-blue-400 text-white flex flex-row items-center gap-1'> 
-                                <Phone className='w-4 h-4' /> <Link href={`tel:${resource.phone}`}> Call</Link>
-                            </Button>
-                        </div> 
+                        <span className='text-gray-500 text-sm'>Disaster Timespan</span>
+                        <div className='flex flex-col  text-sm'>
+                            <span>{new Date(disaster.incidentBeginDate).toDateString()} -</span>
+                            <span>{disaster.incidentEndDate ? new Date(disaster.incidentEndDate).toDateString() : 'Present Day'}</span>
+                        </div>
                     </div>
                     <hr className='h-16 w-[2px] bg-border'/>
                     <div className='w-1/2 flex flex-col gap-1 px-3'>
                         <span className='text-gray-500 text-sm'>Location</span>
-                        <span className='font-semibold text-base leading-5'>{resource.address}, {resource.state}</span>
+                        <span className='font-semibold text-base leading-5'>{disaster.designatedArea}, {disaster.state}</span>
                         <span className='font-semibold text-base leading-5'>{geocode}</span>
                     </div>
                 </div>
                 <hr className='w-full h-1 bg-border'/>
                 <div className='w-full flex flex-col gap-1 px-3'>
-                    <span className='text-gray-500 text-sm'>Important Details</span>
-                    <div className='w-full flex flex-row gap-1 text-sm'>
-                        <Button variant="outline" className='bg-green-500 text-white flex flex-row items-center gap-1'> 
-                            <DollarSign className='w-4 h-4' /> <Link href={resource.donate_link || 'https://google.com'}>Donate</Link>
-                        </Button>
-                        <Button variant="outline" className='bg-yellow-500 text-white flex flex-row items-center gap-1'> 
-                            <HandHelping className='w-4 h-4' /> <Link href={resource.volunteer_link || 'https://google.com'}>Volunteer</Link>
-                        </Button>
-                        <Button variant="outline" className='bg-purple-500 text-white flex flex-row items-center gap-1'> 
-                            <Globe className='w-4 h-4' /> <Link href={resource.website || 'https://google.com'}>Visit</Link>
-                        </Button>
+                    <span className='text-gray-500 text-sm'>Incident Details</span>
+                    <div className='w-full flex flex-col text-sm'>
+                        <span>Last Updated: {new Date(disaster.lastRefresh).toDateString()}</span>
+                        <span>Disaster Number: {disaster.disasterNumber}</span>
                     </div>
                 </div>
             </div>

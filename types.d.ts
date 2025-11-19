@@ -1,16 +1,20 @@
 import { PHASE_DEVELOPMENT_SERVER } from "next/dist/shared/lib/constants";
 
-
-type ResourceType = {
-    name: string,
-    address: string,
-    state: string,
-    city: string,
-    find_food_link: string,
-    donate_link: string,
-    volunteer_link: string,
-    phone: string,
-    website: string,
+type DisasterType = {
+    disasterNumber:number,
+    state:string,
+    declarationDate:string,
+    incidentType:string,
+    declarationTitle:string,
+    incidentBeginDate:string,
+    incidentEndDate:string,
+    disasterCloseoutDate:string,
+    fipsStateCode:string,
+    fipsCountyCode:string,
+    placeCode:string,
+    designatedArea:string,
+    incidentId:string;
+    lastRefresh:string;
 }
 
 type CountyType = [

@@ -2,12 +2,15 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { ResourceType } from '@/types'
+
+import Link from 'next/link'
+
+import { DisasterType } from '@/types'
 
 import { Rss } from 'lucide-react'
 import { SidebarProvider, SidebarTrigger, Sidebar, SidebarContent, SidebarGroup } from "@/components/ui/sidebar"
 import { Heading } from '@/components/ui/heading'
-import { Resource } from '@/components/ui/resource'
+import { Disaster } from '@/components/ui/disaster'
 import { Combobox } from '@/components/ui/combobox'
 import { Clock } from '@/components/ui/clock'
 import { MapComponent } from '@/components/ui/map'
@@ -21,76 +24,81 @@ import { states } from '@/data/states'
 
 export default function Home() {
   const [selectedState, setSelectedState] = useState("")
-  const [resources, setResources] = useState<ResourceType[]>([])
-  const [selectedResource, setSelectedResource] = useState<ResourceType | null>(null)
-  const [filteredResources, setFilteredResources] = useState<ResourceType[]>([])
+  const [disasters, setDisasters] = useState<DisasterType[]>([])
+
   useEffect(() => {
-    const getResources = async () => {
+    const getDisasters = async () => {
       try {
-        const response = await axios.get('/api/resources');
-        console.log(response)
-        console.log("BEYONKA")
-        setResources(response.data)
+        const response = await axios.get('/api/disasters');
+        setDisasters(response.data.DisasterDeclarationsSummaries)
       } catch (error) {
-        console.error('Error fetching resources:', error);
+        console.error('Error fetching disasters:', error);
       }
     };
-    getResources()
+    getDisasters()
   }, [])
 
-  const handleResourceSelect = (resource: ResourceType) => {
-    setSelectedResource(resource)
+  const [selectedDisaster, setSelectedDisaster] = useState<DisasterType | null>(disasters[0])
+  const handleDisasterSelect = (disaster: DisasterType) => {
+    setSelectedDisaster(disaster)
   }
+
+  const [filteredDisasters, setFilteredDisasters] = useState<DisasterType[]>(disasters)
 
   useEffect(()=>{
       if (selectedState) {
-        setFilteredResources(resources.filter((item) => {
+        setFilteredDisasters(disasters.filter((item) => {
           return item.state === selectedState;
         }));
       } else {
-        setFilteredResources(resources)
+        setFilteredDisasters(disasters)
       }
-  },[selectedState, resources])
+  },[selectedState, disasters])
 
 
   return (
     <SidebarProvider>
-      <Sidebar className='bg-background/50 backdrop-blur-md border-r'>
+      <Sidebar className='bg-background/75 backdrop-blur'>
         <SidebarContent  className='py-2 px-2 bg-background/80 backdrop-blur overflow-y-hidden'>
           <SidebarGroup className='w-full flex flex-col space-y-1'>
-            <div className='hidden lg:flex justify-between items-center absolute top-2 left-2 right-2'>
+            <div className='hidden lg:flex justify-start items-center absolute top-2 left-2 right-2'>
               <Logo/>
-              <span className='flex flex-row items-center gap-1 w-fit bg-blue-500 text-white rounded-xl px-3 text-sm'><Rss className='w-3 h-3 text-white'/> Live</span>
             </div>
             <br className='hidden lg:block'/>
             <br className='hidden lg:block'/>
             <div className='flex flex-col gap-2'>
-              <Heading as='h2'>
-                Locate Food Resources Near You
+              <span className='flex flex-row items-center gap-1 w-fit bg-blue-500 text-white rounded-xl px-3 text-sm'><Rss className='w-3 h-3 text-white'/> Live Updates</span>
+              <Heading as='h1'>
+                Live Active Natural Disasters 
               </Heading>
             </div>
             <div className='flex flex-col'>
+              {disasters && disasters.length > 0 && (
+                <p className='text-gray-600'>
+                  Last Updated: {new Date(disasters[0].lastRefresh).toDateString()}
+                </p>
+              )}
               <p className='text-sm text-gray-400'>
-                Data received from American food banks.
+                Disaster data received from <Link className='underline underline-gray-400' href='https://www.fema.gov/about/reports-and-data/openfema'>FEMA</Link>, the United States Federal Emergency Management Agency.
               </p>
             </div>
           </SidebarGroup>
           <Separator/>
           <SidebarGroup className='w-full h-full flex flex-col space-y-1'>
-            <Heading as="h3">Showing { filteredResources && ( filteredResources.length )} resources in {selectedState || "all states"}</Heading>
+            <Heading as="h2">Showing {filteredDisasters.length} disaster(s) in {selectedState || "all states"}</Heading>
             <Combobox
               list={states}
               category="state"
               onValueChange={(value) => setSelectedState(value)}
             />
             <ScrollArea className='w-full h-full max:h-[600px] flex-col '>
-              {filteredResources?.map((item,index) => (
-                <Resource 
+              {filteredDisasters?.map((item,index) => (
+                <Disaster 
                   key={index}
-                  onSelect={()=>{handleResourceSelect(item)}} 
-                  onDeselect={()=>{setSelectedResource(null)}}
-                  resource={item}
-                  selectedResource={selectedResource}
+                  onSelect={()=>{handleDisasterSelect(item)}} 
+                  onDeselect={()=>{setSelectedDisaster(null)}}
+                  disaster={item}
+                  selectedDisaster={selectedDisaster}
                 />
               ))}
             </ScrollArea>
@@ -98,24 +106,20 @@ export default function Home() {
         </SidebarContent>
       </Sidebar>
       <main className='w-full bg-transparent'>
-        <SidebarTrigger className='absolute top-0 z-[100000] h-10 w-10 flex items-center justify-center' />
+      <SidebarTrigger className='absolute z-[99]' />
         <div className='lg:hidden absolute top-0 right-0 p-2 z-[9999]'>
           <Logo/>
         </div>
-        <div className="pointer-events-auto">
-          {resources && (
-            <MapComponent 
-              resources={resources} 
-              selectedResource={selectedResource || (resources.length > 0 ? resources[0] : null)}
-              setSelectedResource={setSelectedResource}  
-            />
-          )}
-        </div>
+        <MapComponent 
+          disasters={disasters} 
+          selectedDisaster={selectedDisaster || disasters[0]}
+          setSelectedDisaster={setSelectedDisaster}  
+        />
         <div>
-          {selectedResource != null &&
+          {selectedDisaster != null &&
             <Popup
-              onClickOut={()=>setSelectedResource(null)}
-              resource={selectedResource}
+              onClickOut={()=>setSelectedDisaster(null)}
+              disaster={selectedDisaster}
             />
           }
         </div>
@@ -129,3 +133,5 @@ export default function Home() {
     </SidebarProvider>
   );
 }
+
+

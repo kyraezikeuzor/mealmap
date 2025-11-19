@@ -1,36 +1,35 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { ResourceType } from '@/types'
+import { DisasterType } from '@/types'
 
 import lodash from 'lodash'
 
 export const Select = (    
-    {children, resource, selectedResource, onSelect, onDeselect, selectedClassName}:
-    {children?:React.ReactNode, resource: ResourceType, selectedResource: ResourceType | null, onSelect: () => void, onDeselect: () => void, selectedClassName:string}
+    {children, disaster, selectedDisaster, onSelect, onDeselect, selectedClassName}:
+    {children?:React.ReactNode, disaster: DisasterType, selectedDisaster: DisasterType | null, onSelect: () => void, onDeselect: () => void, selectedClassName:string}
 ) => {
      
     const [click, setClick] = useState(false)
     
     useEffect(()=>{
-        if (!click) return; // Only handle when actually clicked
-        
         const handleSelect = () => {
-            if (selectedResource == null || !lodash.isEqual(selectedResource, resource)) {
+            
+            if (selectedDisaster == null || lodash.isEqual(selectedDisaster, disaster) == false) {
                 onSelect()
-            } else if (lodash.isEqual(selectedResource, resource)) {
+                //console.log(`Selected ${selectedLocation?.school}`)
+            } else if (lodash.isEqual(selectedDisaster, disaster) == true) {
                 onDeselect()
-                console.log(`Deselected ${selectedResource.name}`)
+                console.log(`Deselected ${selectedDisaster.declarationTitle}`)
             }
         }
         handleSelect()
     },[click])
 
-    const isSelected = selectedResource != null && lodash.isEqual(selectedResource, resource);
-
     return (
         <div 
         className={`w-full h-full hover:cursor-pointer hover:opacity-75
-            ${isSelected ? selectedClassName : ''}`
+            ${lodash.isEqual(selectedDisaster, disaster) == true && selectedClassName}
+            ${lodash.isEqual(selectedDisaster, disaster) == false && ''}`
         } 
         onClick={()=>setClick(!click)}
         >
