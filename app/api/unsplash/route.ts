@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const query = searchParams.get('query') || '';
 
     const unsplashApiKey = process.env.NEXT_PUBLIC_UNSPLASH_API_KEY || '';
-    const apiUrl = `https://api.unsplash.com/search/photos?query=${query}`;
+    const apiUrl = `https://api.unsplash.com/search/photos?query=${query}%20food`;
 
     const response = await axios(apiUrl, {
       headers: {

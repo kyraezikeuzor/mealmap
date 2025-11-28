@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ResourceType } from '@/types'
-
+import Link from 'next/link'
 import { Rss } from 'lucide-react'
 import { SidebarProvider, SidebarTrigger, Sidebar, SidebarContent, SidebarGroup } from "@/components/ui/sidebar"
 import { Heading } from '@/components/ui/heading'
@@ -16,20 +16,25 @@ import { Logo } from '@/components/ui/logo'
 import { Popup } from '@/components/ui/popup'
 import { Separator } from '@/components/ui/separator'
 import { Theme } from '@/components/ui/theme'
-
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Search } from 'lucide-react'
 import { states } from '@/data/states'
 
 export default function Home() {
   const [selectedState, setSelectedState] = useState("")
+  const [selectedStateLabel, setSelectedStateLabel] = useState("")
   const [resources, setResources] = useState<ResourceType[]>([])
   const [selectedResource, setSelectedResource] = useState<ResourceType | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [filteredResources, setFilteredResources] = useState<ResourceType[]>([])
+
+
   useEffect(() => {
     const getResources = async () => {
       try {
         const response = await axios.get('/api/resources');
-        console.log(response)
-        console.log("BEYONKA")
+
         setResources(response.data)
       } catch (error) {
         console.error('Error fetching resources:', error);
@@ -43,13 +48,21 @@ export default function Home() {
   }
 
   useEffect(()=>{
-      if (selectedState) {
-        setFilteredResources(resources.filter((item) => {
-          return item.state === selectedState;
-        }));
-      } else {
-        setFilteredResources(resources)
-      }
+    setFilteredResources(resources.filter((item) => {
+      return item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.city.toLowerCase().includes(searchQuery.toLowerCase()) || item.state.toLowerCase().includes(searchQuery.toLowerCase());
+    }));
+  },[searchQuery,resources])
+
+  
+  useEffect(()=>{
+    if (selectedState) {
+      setFilteredResources(resources.filter((item) => {
+        return item.state === selectedState;
+      }));
+    } else {
+      setFilteredResources(resources)
+    }
+    setSelectedStateLabel(states.find((item) => item.value === selectedState)?.label || "")
   },[selectedState, resources])
 
 
@@ -71,18 +84,28 @@ export default function Home() {
             </div>
             <div className='flex flex-col'>
               <p className='text-sm text-gray-400'>
-                Data received from American food banks.
+                Data received from{" "}
+                <Link className='underline' href="https://www.feedingamerica.org/find-your-local-foodbank/all-food-banks">feedingamerica.org</Link>{", "}
+                <Link className='underline' href="https://www.foodhelpline.org/">foodhelpline.org</Link>{", and "}
+                <Link className='underline' href="https://www.foodbanknyc.org/find-food/#find-food-map#_find-food-map">foodbanknyc.org</Link>.
+                
               </p>
             </div>
           </SidebarGroup>
           <Separator/>
           <SidebarGroup className='w-full h-full flex flex-col space-y-1'>
-            <Heading as="h3">Showing { filteredResources && ( filteredResources.length )} resources in {selectedState || "all states"}</Heading>
-            <Combobox
+            <Heading as="h4">{ filteredResources && ( filteredResources.length )} Search Results</Heading>
+            {/*<Combobox
               list={states}
               category="state"
               onValueChange={(value) => setSelectedState(value)}
+            />*/}
+           <Input 
+                placeholder='Search for a state, city, or resource' 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
             />
+
             <ScrollArea className='w-full h-full max:h-[600px] flex-col '>
               {filteredResources?.map((item,index) => (
                 <Resource 
@@ -94,6 +117,7 @@ export default function Home() {
                 />
               ))}
             </ScrollArea>
+
           </SidebarGroup>
         </SidebarContent>
       </Sidebar>

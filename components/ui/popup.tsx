@@ -15,7 +15,7 @@ import { Apple } from 'lucide-react'
 import { HandHelping } from 'lucide-react'
 import { DollarSign } from 'lucide-react'
 import { Globe } from 'lucide-react'
-
+import { states } from '@/data/states'
 
 export const PopupImage = (
     {resource}:{resource:ResourceType}
@@ -28,7 +28,7 @@ export const PopupImage = (
         const fetchPhotoUrl = async () => {
             try {
                 setLoading(true);
-                const photo = await axios.get(`/api/unsplash?query=${resource.city},${resource.state}`)
+                const photo = await axios.get(`/api/unsplash?query=${states.find((state) => state.value === resource.state)?.label}`)
                 if (photo) {
                     setPhotoUrl(photo.data)
                 } else {
@@ -79,7 +79,7 @@ export const Popup =  (
     })
   
     return (
-        <div className='w-80 lg:w-1/4 2xl:w-1/6 ease-in-out backdrop-blur bg-background/75 py-2 absolute z-[99999] top-20 right-20 rounded-xl shadow-2xl border border-border'>
+        <div className='w-80 lg:w-1/3 xl:w-1/4 2xl:w-1/6 ease-in-out backdrop-blur bg-background/75 py-2 absolute z-[99999] top-20 right-20 rounded-xl shadow-2xl border border-border'>
             <div className='relative flex flex-col space-y-2 '>
                 <span onClick={()=>onClickOut()} className='bg-background absolute top-1 right-2 w-6 h-6 rounded-full p-1 flex flex-col items-center cursor-pointer'>
                     <X className='text-foreground'/>
@@ -103,19 +103,18 @@ export const Popup =  (
                     <div className='w-1/2 flex flex-col gap-1 px-3'>
                         <span className='text-gray-500 text-sm'>Important Links</span>
                         <div className='flex flex-col gap-1 text-sm'>
-                            <Button variant="outline" className='bg-red-500 text-white flex flex-row items-center gap-1'>
+                            {resource.find_food_link && <Button variant="outline" className='bg-red-500 text-white flex flex-row items-center gap-1'>
                                 <Apple className='w-4 h-4' /> <Link href={resource.find_food_link || 'https://google.com'}>Find Food</Link>
-                            </Button>
-                            
-                            <Button variant="outline" className='bg-blue-400 text-white flex flex-row items-center gap-1'> 
+                            </Button>}
+                            {resource.phone && <Button variant="outline" className='bg-blue-400 text-white flex flex-row items-center gap-1'> 
                                 <Phone className='w-4 h-4' /> <Link href={`tel:${resource.phone}`}> Call</Link>
-                            </Button>
+                            </Button>}
                         </div> 
                     </div>
                     <hr className='h-16 w-[2px] bg-border'/>
                     <div className='w-1/2 flex flex-col gap-1 px-3'>
                         <span className='text-gray-500 text-sm'>Location</span>
-                        <span className='font-semibold text-base leading-5'>{resource.address}, {resource.state}</span>
+                        <span className='font-semibold text-base leading-5'>{resource.address}</span>
                         <span className='font-semibold text-base leading-5'>{geocode}</span>
                     </div>
                 </div>
@@ -123,15 +122,15 @@ export const Popup =  (
                 <div className='w-full flex flex-col gap-1 px-3'>
                     <span className='text-gray-500 text-sm'>Important Details</span>
                     <div className='w-full flex flex-row gap-1 text-sm'>
-                        <Button variant="outline" className='bg-green-500 text-white flex flex-row items-center gap-1'> 
-                            <DollarSign className='w-4 h-4' /> <Link href={resource.donate_link || 'https://google.com'}>Donate</Link>
-                        </Button>
-                        <Button variant="outline" className='bg-yellow-500 text-white flex flex-row items-center gap-1'> 
+                        {resource.donate_link && <Button variant="outline" className='bg-green-500 w-1/3 text-white flex flex-row items-center gap-1'> 
+                            <DollarSign className='w-4 h-4' /> <Link href={resource.donate_link || 'https://google.com'}>Give</Link>
+                        </Button>}
+                        {resource.volunteer_link && <Button variant="outline" className='bg-yellow-500 w-1/3 text-white flex flex-row items-center gap-1'> 
                             <HandHelping className='w-4 h-4' /> <Link href={resource.volunteer_link || 'https://google.com'}>Volunteer</Link>
-                        </Button>
-                        <Button variant="outline" className='bg-purple-500 text-white flex flex-row items-center gap-1'> 
+                        </Button>}
+                        {resource.website && <Button variant="outline" className='bg-purple-500 w-1/3 text-white flex flex-row items-center gap-1'> 
                             <Globe className='w-4 h-4' /> <Link href={resource.website || 'https://google.com'}>Visit</Link>
-                        </Button>
+                        </Button>}
                     </div>
                 </div>
             </div>

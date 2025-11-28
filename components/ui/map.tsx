@@ -1,5 +1,6 @@
 // components/ui/map.tsx
 'use client';
+
 import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
@@ -90,7 +91,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
       container: mapContainer.current,
       style: `${isDarkMode ? mapStyleDark : mapStyleLight}?key=${apiKey}`,
       center: [-95.36153769473093, 29.76790572283977], // Consistent center
-      zoom: 4
+      zoom: 8
     });
   
     mapInstance.current = map;
@@ -102,7 +103,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
           const coordinates = await getGeocode(`${resource.address}, ${resource.state}`);
           
           if (coordinates) {
-            const markerColor = 'red';
+            const markerColor = 'orange';
   
             // Create and add marker
             const marker = new maplibregl.Marker({

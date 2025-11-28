@@ -31,7 +31,7 @@ export function Resource (
             <div className='flex flex-col'>
                 <span className='font-medium leading-6'>
                     {formatDeclarationTitle(resource.name)}{' '}
-                    <span className='inline-flex w-fit bg-red-500 text-white font-medium rounded-lg px-2 text-xs items-center gap-1 ml-2'>
+                    <span className=' inline-flex w-fit bg-green-500 text-white font-medium rounded-lg px-2 text-xs items-center gap-1 ml-2'>
                         Food Bank
                     </span>
                 </span>
