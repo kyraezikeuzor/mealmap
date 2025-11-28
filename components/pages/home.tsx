@@ -8,7 +8,6 @@ import { Rss } from 'lucide-react'
 import { SidebarProvider, SidebarTrigger, Sidebar, SidebarContent, SidebarGroup } from "@/components/ui/sidebar"
 import { Heading } from '@/components/ui/heading'
 import { Resource } from '@/components/ui/resource'
-import { Combobox } from '@/components/ui/combobox'
 import { Clock } from '@/components/ui/clock'
 import { MapComponent } from '@/components/ui/map'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -17,13 +16,9 @@ import { Popup } from '@/components/ui/popup'
 import { Separator } from '@/components/ui/separator'
 import { Theme } from '@/components/ui/theme'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Search } from 'lucide-react'
 import { states } from '@/data/states'
 
 export default function Home() {
-  const [selectedState, setSelectedState] = useState("")
-  const [selectedStateLabel, setSelectedStateLabel] = useState("")
   const [resources, setResources] = useState<ResourceType[]>([])
   const [selectedResource, setSelectedResource] = useState<ResourceType | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
@@ -49,11 +44,13 @@ export default function Home() {
 
   useEffect(()=>{
     setFilteredResources(resources.filter((item) => {
-      return item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.city.toLowerCase().includes(searchQuery.toLowerCase()) || item.state.toLowerCase().includes(searchQuery.toLowerCase());
+      const stateObj = states.find((s) => s.value === item.state || s.label === item.state);
+      const stateValue = stateObj?.value || item.state;
+      return item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.city.toLowerCase().includes(searchQuery.toLowerCase()) || stateValue.toLowerCase().includes(searchQuery.toLowerCase());
     }));
   },[searchQuery,resources])
 
-  
+  /*
   useEffect(()=>{
     if (selectedState) {
       setFilteredResources(resources.filter((item) => {
@@ -64,7 +61,7 @@ export default function Home() {
     }
     setSelectedStateLabel(states.find((item) => item.value === selectedState)?.label || "")
   },[selectedState, resources])
-
+  */
 
   return (
     <SidebarProvider>
