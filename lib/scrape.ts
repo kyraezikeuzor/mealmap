@@ -1,4 +1,5 @@
 // scrape-mealmap.ts
+/*
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -142,7 +143,8 @@ function getLinksFromCsv(csvPath: string): string[] {
         return value?.replace(/^["']|["']$/g, '');
       })
       .filter(Boolean);
-  }
+}
+
 async function main() {
   const links = getLinksFromCsv(CSV_PATH);
   console.log(`Found ${links.length} links in CSV`);
@@ -171,3 +173,4 @@ async function main() {
 }
 
 main().catch((err) => console.error("Fatal error:", err));
+*/
