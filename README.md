@@ -18,17 +18,9 @@ If you want to run MealMap locally:
    git clone https://github.com/kyraezikeuzor/mealmap.git
    cd mealmap
 
-2.	Install everything:
+2.	Install everything: npm install
 
-npm install
-yarn install
-pnpm install
-
-3.	Start the dev server:
-
-npm run dev
-yarn dev
-pnpm dev
+3.	Start the dev server: npm run dev
 
 4.	Open http://localhost:3000￼ to see it in your browser.
 
