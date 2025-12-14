@@ -76,7 +76,7 @@ export default function Home() {
             <br className='hidden lg:block'/>
             <div className='flex flex-col gap-2'>
               <Heading as='h2'>
-                Locate Food Resources Near You
+                Find Food Resources Near You
               </Heading>
             </div>
             <div className='flex flex-col'>
