@@ -1,9 +1,8 @@
-# <img src="public/waylarm-logo.png" alt="Logo" width="30"> MealMap: A Simple Way to Find Food Resources Near You
+# <img src="public/waylarm-logo.png" alt="Logo" width="30"> MealMap: Find Food Resources Near You
 
 **MealMap** is a web app I built with [Next.js](https://nextjs.org) to help people find food banks and community food resources across the United States. It uses OpenStreetMap for the map and stores all the food bank information in a Supabase database.
 
 Website: **https://mealmap.vercel.app**  
-*(Add your real link if different)*
 
 ## Features
 - **Interactive Map**: Shows food bank markers across the country using OpenStreetMap.
@@ -22,31 +21,23 @@ If you want to run MealMap locally:
 2.	Install everything:
 
 npm install
-# or yarn install
-# or pnpm install
+yarn install
+pnpm install
 
 3.	Start the dev server:
 
 npm run dev
-# or yarn dev
-# or pnpm dev
-
+yarn dev
+pnpm dev
 
 4.	Open http://localhost:3000￼ to see it in your browser.
 
-###What I Used
+## What I Used
 	•	Next.js + TypeScript for the app
 	•	OpenStreetMap for the map
 	•	Supabase for storing the food bank data
 	•	Firecrawl.dev to help gather food bank information
 
-###Extra Links
-	•	Next.js Docs￼
-	•	Supabase Docs￼
-	•	OpenStreetMap￼
-
-##Deployment
+# Deployment
 
 I deployed MealMap using Vercel because it works well with Next.js and updates automatically whenever I push new code.
-
-If you want, I can also generate a shorter version, a more casual one, or one with screenshots.
